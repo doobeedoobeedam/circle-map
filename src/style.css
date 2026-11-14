@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; }
+  body {
+    @apply bg-cream font-body text-ink antialiased;
+    background-image: radial-gradient(#FFD6E5 1.6px, transparent 1.8px);
+    background-size: 30px 30px;
+  }
+  h1, h2, h3 { @apply font-display; }
+  :focus-visible { outline: 3px solid #9B84F0; outline-offset: 2px; }
+}
+
+@layer components {
+  .card { @apply rounded-4xl border-[3px] border-white bg-white/90 shadow-soft; }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-white px-5 py-2.5 font-bold text-ink shadow-pop
+      transition duration-200 hover:-translate-y-0.5 active:translate-y-0.5 active:shadow-none disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-pink { @apply bg-blush hover:bg-blush-deep; }
+  .btn-mint { @apply bg-minty hover:bg-minty-deep; }
+  .btn-lilac { @apply bg-lilac hover:bg-lilac-deep; }
+  .btn-ghost { @apply bg-white/70 hover:bg-white; }
+  .field {
+    @apply w-full rounded-2xl border-2 border-lilac bg-white px-4 py-2.5 text-ink transition placeholder:text-ink-soft/60
+      focus:border-lilac-deep focus:outline-none focus:ring-4 focus:ring-lilac/60;
+  }
+  .label { @apply mb-1.5 block text-sm font-bold text-ink; }
+}
+
+/* peta Leaflet */
+.leaflet-container { font-family: inherit; background: #D9F0F4; }
+.leaflet-control-zoom { border: none !important; box-shadow: none !important; }
+.leaflet-control-zoom a {
+  width: 38px !important; height: 38px !important; line-height: 34px !important;
+  border-radius: 9999px !important; border: 3px solid #fff !important; margin-bottom: 6px;
+  background: #FFE8F0 !important; color: #4A3F5C !important; font-weight: 700;
+  box-shadow: 0 6px 14px -6px rgba(155, 132, 240, .6);
+}
+.is-picking, .is-picking .leaflet-grab, .is-picking .leaflet-interactive { cursor: crosshair !important; }
+
+/* marker avatar */
+.fm-marker { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.fm-marker__inner {
+  position: absolute; left: -28px; top: -28px; width: 56px; height: 56px;
+  transform: translate(var(--dx, 0px), var(--dy, 0px));
+  transition: transform .35s ease;
+}
+.fm-marker img {
+  width: 56px; height: 56px; border-radius: 9999px; object-fit: cover; background: #fff;
+  border: 4px solid #fff;
+  box-shadow: 0 0 0 3px var(--ring), 0 8px 16px -4px rgba(120, 90, 160, .45);
+  transition: transform .2s ease, box-shadow .2s ease; cursor: pointer;
+}
+.fm-marker:hover img { transform: scale(1.08); }
+.fm-marker.is-selected img {
+  transform: scale(1.14);
+  box-shadow: 0 0 0 4px var(--ring), 0 0 0 9px rgba(255, 255, 255, .9), 0 12px 22px -4px rgba(120, 90, 160, .5);
+}
+.fm-marker__name {
+  position: absolute; top: 61px; left: 50%; transform: translateX(-50%);
+  max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  padding: 1px 10px; border-radius: 9999px; background: #fff; color: #4A3F5C;
+  font: 700 12px/18px 'Nunito Variable', system-ui, sans-serif;
+  box-shadow: 0 0 0 2px var(--ring), 0 4px 8px -2px rgba(120, 90, 160, .3);
+}
+.fm-marker.is-new img { animation: fm-pop .6s cubic-bezier(.2, 1.6, .4, 1) both; }
+
+/* pin sementara */
+.fm-draft {
+  width: 26px; height: 26px; border-radius: 9999px; background: #FF8FB8; border: 4px solid #fff;
+  transform: translate(-13px, -13px); animation: fm-pulse 1.6s infinite;
+}
+
+@keyframes fm-pop { 0% { transform: scale(.2); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fm-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 143, 184, .7); }
+  70% { box-shadow: 0 0 0 16px rgba(255, 143, 184, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 143, 184, 0); }
+}
+
+/* transisi Vue */
+.pop-enter-active { animation: fm-pop .4s cubic-bezier(.2, 1.6, .4, 1); }
+.fade-enter-active, .fade-leave-active { transition: opacity .2s ease, transform .2s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(6px); }
+.slide-enter-active, .slide-leave-active { transition: opacity .25s ease, transform .25s ease; }
+.slide-enter-from, .slide-leave-to { opacity: 0; transform: translateY(20px); }
+
+/* saat buka PNG -> matiin semua animasi supaya hasilnya stabil */
+.fm-static *, .fm-static *::before, .fm-static *::after { transition: none !important; animation: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
